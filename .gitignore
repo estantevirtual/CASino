@@ -26,3 +26,4 @@
 /spec/dummy/log/*.log
 /spec/dummy/tmp
 /spec/dummy/db/*.sqlite3
+tags
