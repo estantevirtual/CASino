@@ -43,8 +43,15 @@ class CASino::ServiceTicket < ActiveRecord::Base
 
   private
   def send_single_sign_out_notification
-    #notifier = SingleSignOutNotifier.new(self)
-    #notifier.notify
+    begin
+      notifier = SingleSignOutNotifier.new(self)
+      notifier.notify
+    rescue => e
+      # This block was created in case of an UTF-8 error in the Faraday gem
+      # arises. We will ignore it and treat as if it was successfuly notified, but will log to try to identify why this happens.
+      Rails.logger.error "exception_class=#{e.class} exception_message=[#{e.message}] operation=send_single_sign_out_notification ticket=#{self.ticket} service=#{self.service}"
+      Rails.logger.error e.backtrace.join("\n")
+    end
     true
   end
 end
